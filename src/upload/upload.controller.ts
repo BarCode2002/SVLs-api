@@ -20,18 +20,15 @@ export class UploadController {
     FilesInterceptor('file', 20, {
       fileFilter: (_req, file, cb) => {
         const allowedMimes = [
-          'application/octet-stream',
+          'application/json',
           'image/jpeg',
+          'image/jpg',
           'image/png',
+          'image/avif',
+          'image/webp',
         ];
         if (!allowedMimes.includes(file.mimetype)) {
-          return cb(
-            new HttpException(
-              'Only mimetypes application/octet-stream, image/jpeg and image/png are allowed!',
-              400,
-            ),
-            false,
-          );
+          return cb(new HttpException('MimeType not allowed', 400), false);
         }
         cb(null, true);
       },
