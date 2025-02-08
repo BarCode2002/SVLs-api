@@ -16,10 +16,10 @@ export class IndexerController {
   }
 
   @Get('holder/:id')
-  async getHolderById(@Param('id') id: string) {
-    const holder = await this.holderRepository.find({ where: { id } });
+  async getHolderById(@Param('svl_key') svl_key: string) {
+    const holder = await this.holderRepository.find({ where: { svl_key } });
     if (holder.length == 0) {
-      throw new NotFoundException(`Holder with ID ${id} not found`);
+      throw new NotFoundException(`Holder with key ${svl_key} not found`);
     }
     return holder;
   }

@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Holder {
   @PrimaryGeneratedColumn()
-  id: string;
+  svl_key: string;
 
   @Column()
   vin: string;
@@ -18,17 +18,17 @@ export class Holder {
   year: string;
 
   @Column()
-  request: string;
+  requester_address: string;
 
   @Column()
-  accept_request: string;
+  request_accepted: string;
 
   @Column()
-  prev_owners_info: string;
+  current_owner_info: string;
 
   @Column()
-  curr_owner_info: string;
+  previous_owners_info: string;
 
   @Column()
-  price: string;
+  svl_price: string;
 }
