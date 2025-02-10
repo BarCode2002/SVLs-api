@@ -1,6 +1,12 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  NotFoundException,
+  Query,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Holder } from './holder.entity';
 
 @Controller('indexer')
@@ -15,18 +21,41 @@ export class IndexerController {
     return await this.holderRepository.find();
   }
 
-  @Get('holder/:id')
-  async getHolderById(@Param('svl_key') svl_key: string) {
+  @Get('holder/pk/:svl_pk')
+  async getHolderById(@Param('svl_pk') svl_key: string) {
     const holder = await this.holderRepository.find({ where: { svl_key } });
     if (holder.length == 0) {
-      throw new NotFoundException(`Holder with key ${svl_key} not found`);
+      throw new NotFoundException(
+        `Holder with primary key ${svl_key} not found`,
+      );
     }
     return holder;
   }
 
-  @Get('holder/vin/:vin')
-  async getHolderByVIN(@Param('vin') vin: string) {
-    const holder = await this.holderRepository.find({ where: { vin } });
+  @Get('holder/owner_address/:owner_address')
+  async getHolderByOwner(@Param('owner_address') owner_address: string) {
+    const holder = await this.holderRepository.find({
+      where: { owner_address },
+    });
+    if (holder.length == 0) {
+      throw new NotFoundException(
+        `Holder with owner address ${owner_address} not found`,
+      );
+    }
+    return holder;
+  }
+
+  @Get('holder/by_vin')
+  async getHolderByVIN(
+    @Query('vin') vin: string,
+    @Query('owner_address') owner_address: string,
+  ) {
+    const holder = await this.holderRepository.find({
+      where: {
+        vin: vin,
+        owner_address: Not(owner_address),
+      },
+    });
     if (holder.length == 0) {
       throw new NotFoundException(`Holder with VIN ${vin} not found`);
     }

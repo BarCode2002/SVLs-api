@@ -6,6 +6,9 @@ export class Holder {
   svl_key: string;
 
   @Column()
+  owner_address: string;
+
+  @Column()
   vin: string;
 
   @Column()
