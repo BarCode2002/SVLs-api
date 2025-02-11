@@ -45,6 +45,24 @@ export class IndexerController {
     return holder;
   }
 
+  @Get('holder/requested_svls')
+  async getHolderByRequestedSVLs(
+    @Query('requester_address') requester_address: string,
+  ) {
+    const holder = await this.holderRepository.find({
+      where: {
+        requester_address: requester_address,
+        owner_address: Not(requester_address),
+      },
+    });
+    if (holder.length == 0) {
+      throw new NotFoundException(
+        `Holder with requester address ${requester_address} not found`,
+      );
+    }
+    return holder;
+  }
+
   @Get('holder/by_vin')
   async getHolderByVIN(
     @Query('vin') vin: string,
