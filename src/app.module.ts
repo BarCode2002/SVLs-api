@@ -5,6 +5,9 @@ import { UploadController } from './upload/upload.controller';
 import { IndexerController } from './indexer/indexer.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Holder } from './indexer/holder.entity';
+import { MongooseModule } from '@nestjs/mongoose';
+import { MongoService } from './mongo/mongo.service';
+import { MongoController } from './mongo/mongo.controller';
 
 @Module({
   imports: [
@@ -19,8 +22,19 @@ import { Holder } from './indexer/holder.entity';
       synchronize: false,
     }),
     TypeOrmModule.forFeature([Holder]),
+    MongooseModule.forRoot(
+      'mongodb://user:pepe@localhost:27017/translationsDB',
+      {
+        authSource: 'admin',
+      },
+    ),
   ],
-  controllers: [AppController, UploadController, IndexerController],
-  providers: [AppService],
+  controllers: [
+    AppController,
+    UploadController,
+    IndexerController,
+    MongoController,
+  ],
+  providers: [AppService, MongoService],
 })
 export class AppModule {}
