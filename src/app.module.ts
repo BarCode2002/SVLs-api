@@ -23,7 +23,7 @@ import { MongoController } from './mongo/mongo.controller';
     }),
     TypeOrmModule.forFeature([Holder]),
     MongooseModule.forRoot(
-      'mongodb://user:pepe@localhost:27017/translationsDB',
+      'mongodb://user:pepe@localhost:27017/miscellaniousDB',
       {
         authSource: 'admin',
       },
