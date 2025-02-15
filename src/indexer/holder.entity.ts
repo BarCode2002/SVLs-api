@@ -12,15 +12,6 @@ export class Holder {
   vin: string;
 
   @Column()
-  brand: string;
-
-  @Column()
-  model: string;
-
-  @Column()
-  year: string;
-
-  @Column()
   requester_address: string;
 
   @Column()
