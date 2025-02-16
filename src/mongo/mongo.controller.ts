@@ -9,6 +9,10 @@ interface List {
   type: string;
 }
 
+interface SmartContract {
+  field: string;
+}
+
 @Controller('mongo')
 export class MongoController {
   constructor(private readonly mongoService: MongoService) {}
@@ -23,5 +27,10 @@ export class MongoController {
   @Get('lists')
   async getListsByType(@Query('type') type: string): Promise<List | null> {
     return this.mongoService.findByType(type);
+  }
+
+  @Get('smartcontract')
+  async getSmartContractField(): Promise<SmartContract | null> {
+    return this.mongoService.findSmartContractField();
   }
 }
