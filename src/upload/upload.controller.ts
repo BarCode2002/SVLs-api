@@ -9,6 +9,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import axios, { AxiosResponse } from 'axios';
 import { Multer } from 'multer';
 import * as FormData from 'form-data';
+import * as zlib from 'zlib';
 
 interface IPFSResponse {
   Hash: string;
@@ -38,11 +39,25 @@ export class UploadController {
   async uploadFiles(@UploadedFiles() files: Multer.File[]) {
     try {
       const uploadedFilesCIDs: string[] = [];
-
       for (const file of files) {
         const formData = new FormData();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        formData.append('file', file.buffer, file.originalname);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (file.mimetype == 'application/json') {
+          const compressedBuffer: Buffer = await new Promise(
+            (resolve, reject) => {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+              zlib.gzip(file.buffer, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+              });
+            },
+          );
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+          formData.append('file', compressedBuffer, file.originalname);
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+          formData.append('file', file.buffer, file.originalname);
+        }
 
         const response: AxiosResponse<IPFSResponse> = await axios.post(
           'http://127.0.0.1:5001/api/v0/add',
