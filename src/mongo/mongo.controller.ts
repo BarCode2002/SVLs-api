@@ -13,6 +13,10 @@ interface SmartContract {
   field: string;
 }
 
+interface Brand {
+  brand: string;
+}
+
 @Controller('mongo')
 export class MongoController {
   constructor(private readonly mongoService: MongoService) {}
@@ -32,5 +36,10 @@ export class MongoController {
   @Get('smartcontract')
   async getSmartContractField(): Promise<SmartContract | null> {
     return this.mongoService.findSmartContractField();
+  }
+
+  @Get('models')
+  async getModelsByBrand(@Query('brand') brand: string): Promise<Brand | null> {
+    return this.mongoService.findByBrand(brand);
   }
 }

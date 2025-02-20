@@ -14,6 +14,10 @@ interface SmartContract {
   field: string;
 }
 
+interface Brand {
+  brand: string;
+}
+
 @Injectable()
 export class MongoService {
   constructor(@InjectConnection() private readonly connection: Connection) {}
@@ -47,5 +51,16 @@ export class MongoService {
       this.connection.db.collection<SmartContract>('smartContract');
     const result = await smartContractCollection.findOne();
     return result;
+  }
+
+  async findByBrand(brand: string): Promise<Brand | null> {
+    if (!this.connection.db) {
+      throw new Error('Database connection is not available');
+    }
+    const modelsCollection = this.connection.db.collection<Brand>('models');
+    const result = await modelsCollection.findOne({ brand });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    if (result) return result['models'];
+    else return result;
   }
 }
