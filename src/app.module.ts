@@ -13,21 +13,18 @@ import { MongoController } from './mongo/mongo.controller';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'dipdup',
-      password: 'pepe11',
-      database: 'dipdup',
+      host: process.env.POSTGRES_HOST,
+      port: Number(process.env.POSTGRES_PORT) || 5432,
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
       entities: [Holder],
       synchronize: false,
     }),
     TypeOrmModule.forFeature([Holder]),
-    MongooseModule.forRoot(
-      'mongodb://user:pepe@localhost:27017/miscellaniousDB',
-      {
-        authSource: 'admin',
-      },
-    ),
+    MongooseModule.forRoot(process.env.MONGO_URI || '', {
+      authSource: 'admin',
+    }),
   ],
   controllers: [
     AppController,
