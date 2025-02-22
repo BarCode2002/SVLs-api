@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ipfs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ipfs
+  template:
+    metadata:
+      labels:
+        app: ipfs
+    spec:
+      containers:
+        - name: ipfs
+          image: ipfs/kubo:latest
+          ports:
+            - containerPort: 4001
+            - containerPort: 4001
+              protocol: UDP
+            - containerPort: 5001
+            - containerPort: 8080
+          volumeMounts:
+            - name: ipfs-storage
+              mountPath: /data/ipfs
+      volumes:
+        - name: ipfs-storage
+          persistentVolumeClaim:
+            claimName: ipfs-pvc
