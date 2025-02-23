@@ -60,7 +60,7 @@ export class UploadController {
         }
 
         const response: AxiosResponse<IPFSResponse> = await axios.post(
-          'http://127.0.0.1:5001/api/v0/add',
+          'http://ipfs-service:5001/api/v0/add',
           formData,
           {
             headers: formData.getHeaders(),
