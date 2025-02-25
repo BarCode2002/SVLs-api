@@ -8,7 +8,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/Users/barcode/mongo-backup"
+    path: "/Users/barcode/nfsMonfo"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

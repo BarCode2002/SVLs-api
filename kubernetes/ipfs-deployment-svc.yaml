@@ -13,8 +13,8 @@ spec:
         app: ipfs
     spec:
       containers:
-        - name: ipfs
-          image: ipfs/kubo:latest
+        - image: ipfs/kubo:latest
+          name: ipfs-container
           ports:
             - containerPort: 4001
             - containerPort: 4001
@@ -22,9 +22,33 @@ spec:
             - containerPort: 5001
             - containerPort: 8080
           volumeMounts:
-            - name: ipfs-storage
+            - name: ipfs-data
               mountPath: /data/ipfs
       volumes:
-        - name: ipfs-storage
+        - name: ipfs-data
           persistentVolumeClaim:
             claimName: ipfs-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ipfs-svc
+spec:
+  selector:
+    app: ipfs
+  ports:
+    - name: p2p-tcp
+      port: 4001
+      targetPort: 4001
+    - name: p2p-udp
+      port: 4001
+      targetPort: 4001
+      protocol: UDP
+    - name: rpc-api
+      port: 5001
+      targetPort: 5001
+    - name: gateway
+      port: 8080
+      targetPort: 8080

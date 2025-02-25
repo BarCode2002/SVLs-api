@@ -22,9 +22,12 @@ import { MongoController } from './mongo/mongo.controller';
       synchronize: false,
     }),
     TypeOrmModule.forFeature([Holder]),
-    MongooseModule.forRoot(process.env.MONGO_URI || '', {
-      authSource: 'admin',
-    }),
+    MongooseModule.forRoot(
+      `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT || 27017}/miscellaniousDB`,
+      {
+        authSource: 'admin',
+      },
+    ),
   ],
   controllers: [
     AppController,

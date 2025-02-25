@@ -8,8 +8,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/Users/barcode/Documents/ipfs/ipfs_data"
-
+    path: "/Users/barcode/nfsIpfs"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
