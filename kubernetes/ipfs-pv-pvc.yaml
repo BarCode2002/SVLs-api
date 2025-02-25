@@ -7,8 +7,9 @@ spec:
     storage: 5Gi
   accessModes:
     - ReadWriteOnce
-  hostPath:
+  nfs:
     path: "/Users/barcode/nfsIpfs"
+    server: host.docker.internal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,3 +21,4 @@ spec:
   resources:
     requests:
       storage: 5Gi
+

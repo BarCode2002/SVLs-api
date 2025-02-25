@@ -7,8 +7,9 @@ spec:
     storage: 5Gi
   accessModes:
     - ReadWriteOnce
-  hostPath:
-    path: "/Users/barcode/nfsMonfo"
+  nfs:
+    path: "/Users/barcode/nfsMongo"
+    server: host.docker.internal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
