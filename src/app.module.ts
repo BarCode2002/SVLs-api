@@ -20,10 +20,15 @@ import { MongoController } from './mongo/mongo.controller';
       database: process.env.POSTGRES_DB,
       entities: [Holder],
       synchronize: false,
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
     }),
     TypeOrmModule.forFeature([Holder]),
     MongooseModule.forRoot(
-      `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT || 27017}/miscellaniousDB`,
+      `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/miscellaniousDB`,
       {
         authSource: 'admin',
       },

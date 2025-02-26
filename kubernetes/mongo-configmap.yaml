@@ -3,6 +3,4 @@ kind: ConfigMap
 metadata:
   name: mongo-configmap
 data:
-  MONGO_DB: pepe
-  MONGO_HOST: mongo-svc
-  MONGO_USER: user
+  MONGO_HOST: clustersvl.waqrc.mongodb.net

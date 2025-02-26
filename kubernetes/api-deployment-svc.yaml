@@ -36,14 +36,9 @@ spec:
                 name: postgres-secret
           - name: POSTGRES_USER
             valueFrom:
-              configMapKeyRef:
+              secretKeyRef:
                 key: POSTGRES_USER
-                name: postgres-configmap
-          - name: MONGO_DB
-            valueFrom:
-              configMapKeyRef:
-                key: MONGO_DB
-                name: mongo-configmap
+                name: postgres-secret
           - name: MONGO_HOST
             valueFrom:
               configMapKeyRef:
@@ -56,9 +51,9 @@ spec:
                 name: mongo-secret
           - name: MONGO_USER
             valueFrom:
-              configMapKeyRef:
+              secretKeyRef:
                 key: MONGO_USER
-                name: mongo-configmap
+                name: mongo-secret
           image: barcode11/api:latest
           name: api-container
           ports:
