@@ -4,10 +4,34 @@ import {
   Param,
   NotFoundException,
   Query,
+  Post,
+  Body,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { Holder } from './holder.entity';
+
+interface FiltersSVLs {
+  numOwners: string;
+  numMaintenances: string;
+  numDefects: string;
+  defectChoosenLevel: string;
+  numRepairs: string;
+  vin: string;
+  brand: string;
+  model: string;
+  year: string;
+  kilometers: string;
+  state: string;
+  color: string;
+  power: string;
+  shift: string;
+  fuel: string;
+  autonomy: string;
+  climate: string;
+  usage: string;
+  storage: string;
+}
 
 @Controller('indexer')
 export class IndexerController {
@@ -63,12 +87,15 @@ export class IndexerController {
     return holder;
   }
 
-  @Get('holder/by_vin')
-  async getHolderByVIN(
-    @Query('vin') vin: string,
+  @Post('holder/filterSVL')
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getHolderByFilters(
     @Query('owner_address') owner_address: string,
+    @Body() filters: FiltersSVLs,
   ) {
-    const holder = await this.holderRepository.find({
+    console.log(owner_address);
+    console.log(filters);
+    /*const holder = await this.holderRepository.find({
       where: {
         vin: vin,
         owner_address: Not(owner_address),
@@ -77,6 +104,6 @@ export class IndexerController {
     if (holder.length == 0) {
       throw new NotFoundException(`Holder with VIN ${vin} not found`);
     }
-    return holder;
+    return holder;*/
   }
 }
