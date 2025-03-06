@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Controller,
   Get,
@@ -8,7 +10,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { Between, Not, Repository } from 'typeorm';
 import { Holder } from './holder.entity';
 
 interface FiltersSVLs {
@@ -35,7 +37,7 @@ interface FiltersSVLs {
 
 @Controller('indexer')
 export class IndexerController {
-  private readonly GROUP_SIZE = 1;
+  private readonly GROUP_SIZE = 3;
   constructor(
     @InjectRepository(Holder)
     private readonly holderRepository: Repository<Holder>,
@@ -112,23 +114,33 @@ export class IndexerController {
     @Body() filters: FiltersSVLs,
   ) {
     console.log(filters);
-    const vin = filters.vin;
+    let where: any = {};
+    where.owner_address = owner_address;
+    if (filters.vin != '') where.vin = filters.vin;
+    where.brand =
+      filters.brand == 'Dashboard.Placeholders.brand' ? '' : filters.brand;
+    where.model =
+      filters.model == 'Dashboard.Placeholders.model' ? '' : filters.model;
+    where.year = Between(
+      filters.year[0] == '' ? '0' : filters.year[0],
+      filters.year[1] == '' ? '9999' : filters.year[1],
+    );
+    where = Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      Object.entries(where).filter(([, value]) => value !== ''),
+    );
+
+    console.log(where);
     const holder = await this.holderRepository.find({
       skip: this.GROUP_SIZE * parseInt(page),
       take: this.GROUP_SIZE,
-      where: {
-        vin: vin,
-        owner_address: Not(owner_address),
-      },
+      where,
     });
-    const totalHolders = await this.holderRepository.find({
-      where: {
-        vin: vin,
-        owner_address: Not(owner_address),
-      },
-    });
+    const totalHolders = await this.holderRepository.find({ where });
     if (holder.length == 0) {
-      throw new NotFoundException(`Holder with VIN ${vin} not found`);
+      throw new NotFoundException(
+        `Holder with filters ${JSON.stringify(filters)} not found`,
+      );
     }
     return [holder, totalHolders.length];
   }
