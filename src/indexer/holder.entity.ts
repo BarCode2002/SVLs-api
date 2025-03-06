@@ -22,4 +22,16 @@ export class Holder {
 
   @Column()
   svl_price: string;
+
+  @Column()
+  vin: string;
+
+  @Column()
+  brand: string;
+
+  @Column()
+  model: string;
+
+  @Column()
+  year: string;
 }

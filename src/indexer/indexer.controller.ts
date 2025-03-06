@@ -35,6 +35,7 @@ interface FiltersSVLs {
 
 @Controller('indexer')
 export class IndexerController {
+  private readonly GROUP_SIZE = 1;
   constructor(
     @InjectRepository(Holder)
     private readonly holderRepository: Repository<Holder>,
@@ -56,9 +57,17 @@ export class IndexerController {
     return holder;
   }
 
-  @Get('holder/owner_address/:owner_address')
-  async getHolderByOwner(@Param('owner_address') owner_address: string) {
+  @Get('holder/my_svls')
+  async getHolderByOwner(
+    @Query('owner_address') owner_address: string,
+    @Query('page') page: string,
+  ) {
     const holder = await this.holderRepository.find({
+      skip: this.GROUP_SIZE * parseInt(page),
+      take: this.GROUP_SIZE,
+      where: { owner_address },
+    });
+    const totalHolders = await this.holderRepository.find({
       where: { owner_address },
     });
     if (holder.length == 0) {
@@ -66,14 +75,23 @@ export class IndexerController {
         `Holder with owner address ${owner_address} not found`,
       );
     }
-    return holder;
+    return [holder, totalHolders.length];
   }
 
   @Get('holder/requested_svls')
   async getHolderByRequestedSVLs(
     @Query('requester_address') requester_address: string,
+    @Query('page') page: string,
   ) {
     const holder = await this.holderRepository.find({
+      skip: this.GROUP_SIZE * parseInt(page),
+      take: this.GROUP_SIZE,
+      where: {
+        requester_address: requester_address,
+        owner_address: Not(requester_address),
+      },
+    });
+    const totalHolders = await this.holderRepository.find({
       where: {
         requester_address: requester_address,
         owner_address: Not(requester_address),
@@ -84,18 +102,26 @@ export class IndexerController {
         `Holder with requester address ${requester_address} not found`,
       );
     }
-    return holder;
+    return [holder, totalHolders.length];
   }
 
   @Post('holder/filterSVL')
-  // eslint-disable-next-line @typescript-eslint/require-await
   async getHolderByFilters(
     @Query('owner_address') owner_address: string,
+    @Query('page') page: string,
     @Body() filters: FiltersSVLs,
   ) {
-    console.log(owner_address);
     console.log(filters);
-    /*const holder = await this.holderRepository.find({
+    const vin = filters.vin;
+    const holder = await this.holderRepository.find({
+      skip: this.GROUP_SIZE * parseInt(page),
+      take: this.GROUP_SIZE,
+      where: {
+        vin: vin,
+        owner_address: Not(owner_address),
+      },
+    });
+    const totalHolders = await this.holderRepository.find({
       where: {
         vin: vin,
         owner_address: Not(owner_address),
@@ -104,6 +130,6 @@ export class IndexerController {
     if (holder.length == 0) {
       throw new NotFoundException(`Holder with VIN ${vin} not found`);
     }
-    return holder;*/
+    return [holder, totalHolders.length];
   }
 }
