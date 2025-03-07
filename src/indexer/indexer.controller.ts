@@ -18,7 +18,13 @@ interface FiltersSVLs {
   numMaintenances: string;
   numDefects: string;
   numModifications: string;
-  defectChoosenLevel: string;
+  defects: {
+    cosmetic: [boolean, string, string];
+    minor: [boolean, string, string];
+    moderate: [boolean, string, string];
+    important: [boolean, string, string];
+    critical: [boolean, string, string];
+  };
   numRepairs: string;
   vin: string;
   brand: string;
@@ -129,6 +135,38 @@ export class IndexerController {
       filters.numModifications[0] == '' ? '0' : filters.numModifications[0],
       filters.numModifications[1] == '' ? '9999' : filters.numModifications[1],
     );
+
+    if (filters.defects.cosmetic[0] == true) {
+      where.num_cosmetic_defects = Between(
+        filters.defects.cosmetic[1],
+        filters.defects.cosmetic[2],
+      );
+    }
+    if (filters.defects.minor[0] == true) {
+      where.num_minor_defects = Between(
+        filters.defects.minor[1],
+        filters.defects.minor[2],
+      );
+    }
+    if (filters.defects.moderate[0] == true) {
+      where.num_moderate_defects = Between(
+        filters.defects.moderate[1],
+        filters.defects.moderate[2],
+      );
+    }
+    if (filters.defects.important[0] == true) {
+      where.num_important_defects = Between(
+        filters.defects.important[1],
+        filters.defects.important[2],
+      );
+    }
+    if (filters.defects.critical[0] == true) {
+      where.num_critical_defects = Between(
+        filters.defects.critical[1],
+        filters.defects.critical[2],
+      );
+    }
+
     where.num_repairs = Between(
       filters.numRepairs[0] == '' ? '0' : filters.numRepairs[0],
       filters.numRepairs[1] == '' ? '9999' : filters.numRepairs[1],

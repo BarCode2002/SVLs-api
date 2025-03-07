@@ -33,16 +33,16 @@ export class Holder {
   model: string;
 
   @Column()
-  year: string;
+  year: number;
 
   @Column()
-  kilometers: string;
+  kilometers: number;
 
   @Column()
   state: string;
 
   @Column()
-  power: string;
+  power: number;
 
   @Column()
   shift: string;
@@ -51,7 +51,7 @@ export class Holder {
   fuel: string;
 
   @Column()
-  autonomy: string;
+  autonomy: number;
 
   @Column()
   climate: string;
@@ -63,14 +63,29 @@ export class Holder {
   storage: string;
 
   @Column()
-  num_owners: string;
+  num_owners: number;
 
   @Column()
-  num_maintenances: string;
+  num_maintenances: number;
 
   @Column()
-  num_modifications: string;
+  num_modifications: number;
 
   @Column()
-  num_repairs: string;
+  num_cosmetic_defects: number;
+
+  @Column()
+  num_minor_defects: number;
+
+  @Column()
+  num_moderate_defects: number;
+
+  @Column()
+  num_important_defects: number;
+
+  @Column()
+  num_critical_defects: number;
+
+  @Column()
+  num_repairs: number;
 }
