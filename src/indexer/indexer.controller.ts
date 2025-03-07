@@ -10,7 +10,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Not, Repository } from 'typeorm';
+import { Between, In, Not, Repository } from 'typeorm';
 import { Holder } from './holder.entity';
 
 interface FiltersSVLs {
@@ -25,15 +25,15 @@ interface FiltersSVLs {
   model: string;
   year: string;
   kilometers: string;
-  state: string;
+  state: string[];
   color: string;
   power: string;
-  shift: string;
-  fuel: string;
+  shift: string[];
+  fuel: string[];
   autonomy: string;
-  climate: string;
-  usage: string;
-  storage: string;
+  climate: string[];
+  usage: string[];
+  storage: string[];
 }
 
 @Controller('indexer')
@@ -115,7 +115,7 @@ export class IndexerController {
     @Body() filters: FiltersSVLs,
   ) {
     console.log(filters);
-    let where: any = {};
+    const where: any = {};
     where.owner_address = Not(owner_address);
     where.num_owners = Between(
       filters.numOwners[0] == '' ? '0' : filters.numOwners[0],
@@ -133,11 +133,11 @@ export class IndexerController {
       filters.numRepairs[0] == '' ? '0' : filters.numRepairs[0],
       filters.numRepairs[1] == '' ? '9999' : filters.numRepairs[1],
     );
-    where.vin = filters.vin;
-    where.brand =
-      filters.brand == 'Dashboard.Placeholders.brand' ? '' : filters.brand;
-    where.model =
-      filters.model == 'Dashboard.Placeholders.model' ? '' : filters.model;
+    if (filters.vin != '') where.vin = filters.vin;
+    if (filters.brand != '' && filters.brand != 'Dashboard.Placeholders.brand')
+      where.brand = filters.brand;
+    if (filters.model != '' && filters.model != 'Dashboard.Placeholders.model')
+      where.brand = filters.brand;
     where.year = Between(
       filters.year[0] == '' ? '0' : filters.year[0],
       filters.year[1] == '' ? '9999' : filters.year[1],
@@ -148,7 +148,7 @@ export class IndexerController {
       kmFrom = Math.round(
         parseFloat(filters.kilometers[0]) * 0.621371,
       ).toString();
-    else if (filters.kilometers[1] != '') kmFrom = '0';
+    else if (filters.kilometers[0] != '') kmFrom = '0';
     let kmTo = '';
     if (filters.kilometers[1] != '' && filters.kilometers[2] == 'mi')
       kmTo = Math.round(
@@ -160,13 +160,15 @@ export class IndexerController {
       filters.kilometers[1] == '' ? '99999999' : kmTo,
     );
 
-    //where.state =
-      //filters.state == 'Dashboard.Placeholders.state' ? '' : filters.state;
+    let state = filters.state;
+    if (filters.state[0] == 'Dashboard.Placeholders.state') state[0] = '';
+    state = state.filter((str) => str !== '');
+    if (state.length > 0) where.state = In(state);
 
     let powerFrom = '';
     if (filters.power[0] != '' && filters.power[2] == 'kW')
       powerFrom = Math.round(parseFloat(filters.power[0]) * 1.34102).toString();
-    else if (filters.power[1] != '') powerFrom = '0';
+    else if (filters.power[0] != '') powerFrom = '0';
     let powerTo = '';
     if (filters.power[1] != '' && filters.power[2] == 'kW')
       powerTo = Math.round(parseFloat(filters.power[0]) * 1.34102).toString();
@@ -176,10 +178,15 @@ export class IndexerController {
       filters.power[1] == '' ? '9999' : powerTo,
     );
 
-    //where.shift =
-      //filters.shift == 'Dashboard.Placeholders.shift' ? '' : filters.shift;
-    //where.fuel =
-      //filters.fuel == 'Dashboard.Placeholders.fuel' ? '' : filters.fuel;
+    let shift = filters.shift;
+    if (filters.shift[0] == 'Dashboard.Placeholders.shift') shift[0] = '';
+    shift = shift.filter((str) => str !== '');
+    if (shift.length > 0) where.shift = In(shift);
+
+    let fuel = filters.fuel;
+    if (filters.fuel[0] == 'Dashboard.Placeholders.fuel') fuel[0] = '';
+    fuel = fuel.filter((str) => str !== '');
+    if (fuel.length > 0) where.fuel = In(fuel);
 
     let autonomyFrom = '';
     if (filters.autonomy[0] != '' && filters.autonomy[2] == 'mi')
@@ -198,20 +205,21 @@ export class IndexerController {
       filters.autonomy[1] == '' ? '9999999' : autonomyTo,
     );
 
-    /*where.climate =
-      filters.climate == 'Dashboard.Placeholders.climate'
-        ? ''
-        : filters.climate;
-    where.usage =
-      filters.usage == 'Dashboard.Placeholders.usage' ? '' : filters.usage;
-    where.storage =
-      filters.storage == 'Dashboard.Placeholders.storage'
-        ? ''
-        : filters.storage;*/
-    where = Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      Object.entries(where).filter(([, value]) => value !== ''),
-    );
+    let climate = filters.climate;
+    if (filters.climate[0] == 'Dashboard.Placeholders.climate') climate[0] = '';
+    climate = climate.filter((str) => str !== '');
+    if (climate.length > 0) where.climate = In(climate);
+
+    let usage = filters.usage;
+    if (filters.usage[0] == 'Dashboard.Placeholders.usage') usage[0] = '';
+    usage = usage.filter((str) => str !== '');
+    if (usage.length > 0) where.usage = In(usage);
+
+    let storage = filters.storage;
+    if (filters.storage[0] == 'Dashboard.Placeholders.storage') storage[0] = '';
+    storage = storage.filter((str) => str !== '');
+    if (storage.length > 0) where.storage = In(storage);
+
     console.log(where);
     const holder = await this.holderRepository.find({
       skip: this.GROUP_SIZE * parseInt(page),
