@@ -34,4 +34,43 @@ export class Holder {
 
   @Column()
   year: string;
+
+  @Column()
+  kilometers: string;
+
+  @Column()
+  state: string;
+
+  @Column()
+  power: string;
+
+  @Column()
+  shift: string;
+
+  @Column()
+  fuel: string;
+
+  @Column()
+  autonomy: string;
+
+  @Column()
+  climate: string;
+
+  @Column()
+  usage: string;
+
+  @Column()
+  storage: string;
+
+  @Column()
+  num_owners: string;
+
+  @Column()
+  num_maintenances: string;
+
+  @Column()
+  num_modifications: string;
+
+  @Column()
+  num_repairs: string;
 }
