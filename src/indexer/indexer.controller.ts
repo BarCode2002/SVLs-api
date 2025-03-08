@@ -195,7 +195,7 @@ export class IndexerController {
       kmFrom = parseInt(filters.kilometers[0]);
     let kmTo = 99999999;
     if (filters.kilometers[1] != '' && filters.kilometers[2] == 'mi')
-      kmTo = Math.round(parseFloat(filters.kilometers[0]) * 0.621371);
+      kmTo = Math.round(parseFloat(filters.kilometers[1]) * 0.621371);
     else if (filters.kilometers[1] != '')
       kmFrom = parseInt(filters.kilometers[1]);
     where.kilometers = Between(kmFrom, kmTo);
@@ -232,7 +232,7 @@ export class IndexerController {
       autonomyFrom = parseInt(filters.autonomy[0]);
     let autonomyTo = 9999999;
     if (filters.autonomy[1] != '' && filters.autonomy[2] == 'mi')
-      autonomyTo = Math.round(parseFloat(filters.autonomy[0]) * 0.621371);
+      autonomyTo = Math.round(parseFloat(filters.autonomy[1]) * 0.621371);
     else if (filters.autonomy[1] != '')
       autonomyTo = parseInt(filters.autonomy[1]);
     where.autonomy = Between(autonomyFrom, autonomyTo);
