@@ -120,20 +120,27 @@ export class IndexerController {
     @Query('page') page: string,
     @Body() filters: FiltersSVLs,
   ) {
-    console.log(filters);
     const where: any = {};
     where.owner_address = Not(owner_address);
     where.num_owners = Between(
-      filters.numOwners[0] == '' ? '0' : filters.numOwners[0],
-      filters.numOwners[1] == '' ? '9999' : filters.numOwners[1],
+      filters.numOwners[0] == '' ? 0 : parseInt(filters.numOwners[0]),
+      filters.numOwners[1] == '' ? 9999 : parseInt(filters.numOwners[1]),
     );
     where.num_maintenances = Between(
-      filters.numMaintenances[0] == '' ? '0' : filters.numMaintenances[0],
-      filters.numMaintenances[1] == '' ? '9999' : filters.numMaintenances[1],
+      filters.numMaintenances[0] == ''
+        ? 0
+        : parseInt(filters.numMaintenances[0]),
+      filters.numMaintenances[1] == ''
+        ? 9999
+        : parseInt(filters.numMaintenances[1]),
     );
     where.num_modifications = Between(
-      filters.numModifications[0] == '' ? '0' : filters.numModifications[0],
-      filters.numModifications[1] == '' ? '9999' : filters.numModifications[1],
+      filters.numModifications[0] == ''
+        ? 0
+        : parseInt(filters.numModifications[0]),
+      filters.numModifications[1] == ''
+        ? 99999
+        : parseInt(filters.numModifications[1]),
     );
 
     if (filters.defects.cosmetic[0] == true) {
@@ -168,8 +175,8 @@ export class IndexerController {
     }
 
     where.num_repairs = Between(
-      filters.numRepairs[0] == '' ? '0' : filters.numRepairs[0],
-      filters.numRepairs[1] == '' ? '9999' : filters.numRepairs[1],
+      filters.numRepairs[0] == '' ? 0 : parseInt(filters.numRepairs[0]),
+      filters.numRepairs[1] == '' ? 9999 : parseInt(filters.numRepairs[1]),
     );
     if (filters.vin != '') where.vin = filters.vin;
     if (filters.brand != '' && filters.brand != 'Dashboard.Placeholders.brand')
@@ -177,44 +184,36 @@ export class IndexerController {
     if (filters.model != '' && filters.model != 'Dashboard.Placeholders.model')
       where.brand = filters.brand;
     where.year = Between(
-      filters.year[0] == '' ? '0' : filters.year[0],
-      filters.year[1] == '' ? '9999' : filters.year[1],
+      filters.year[0] == '' ? 0 : parseInt(filters.year[0]),
+      filters.year[1] == '' ? 9999 : parseInt(filters.year[1]),
     );
 
-    let kmFrom = '';
+    let kmFrom = 0;
     if (filters.kilometers[0] != '' && filters.kilometers[2] == 'mi')
-      kmFrom = Math.round(
-        parseFloat(filters.kilometers[0]) * 0.621371,
-      ).toString();
-    else if (filters.kilometers[0] != '') kmFrom = '0';
-    let kmTo = '';
+      kmFrom = Math.round(parseFloat(filters.kilometers[0]) * 0.621371);
+    else if (filters.kilometers[0] != '')
+      kmFrom = parseInt(filters.kilometers[0]);
+    let kmTo = 99999999;
     if (filters.kilometers[1] != '' && filters.kilometers[2] == 'mi')
-      kmTo = Math.round(
-        parseFloat(filters.kilometers[0]) * 0.621371,
-      ).toString();
-    else if (filters.kilometers[1] != '') kmTo = '99999999';
-    where.kilometers = Between(
-      filters.kilometers[0] == '' ? '0' : kmFrom,
-      filters.kilometers[1] == '' ? '99999999' : kmTo,
-    );
+      kmTo = Math.round(parseFloat(filters.kilometers[0]) * 0.621371);
+    else if (filters.kilometers[1] != '')
+      kmFrom = parseInt(filters.kilometers[1]);
+    where.kilometers = Between(kmFrom, kmTo);
 
     let state = filters.state;
     if (filters.state[0] == 'Dashboard.Placeholders.state') state[0] = '';
     state = state.filter((str) => str !== '');
     if (state.length > 0) where.state = In(state);
 
-    let powerFrom = '';
+    let powerFrom = 0;
     if (filters.power[0] != '' && filters.power[2] == 'kW')
-      powerFrom = Math.round(parseFloat(filters.power[0]) * 1.34102).toString();
-    else if (filters.power[0] != '') powerFrom = '0';
-    let powerTo = '';
+      powerFrom = Math.round(parseFloat(filters.power[0]) * 1.34102);
+    else if (filters.power[0] != '') powerFrom = parseInt(filters.power[0]);
+    let powerTo = 9999;
     if (filters.power[1] != '' && filters.power[2] == 'kW')
-      powerTo = Math.round(parseFloat(filters.power[0]) * 1.34102).toString();
-    else if (filters.power[1] != '') powerTo = '9999';
-    where.power = Between(
-      filters.power[0] == '' ? '0' : powerFrom,
-      filters.power[1] == '' ? '9999' : powerTo,
-    );
+      powerTo = Math.round(parseFloat(filters.power[1]) * 1.34102);
+    else if (filters.power[1] != '') powerTo = parseInt(filters.power[1]);
+    where.power = Between(powerFrom, powerTo);
 
     let shift = filters.shift;
     if (filters.shift[0] == 'Dashboard.Placeholders.shift') shift[0] = '';
@@ -226,22 +225,17 @@ export class IndexerController {
     fuel = fuel.filter((str) => str !== '');
     if (fuel.length > 0) where.fuel = In(fuel);
 
-    let autonomyFrom = '';
+    let autonomyFrom = 0;
     if (filters.autonomy[0] != '' && filters.autonomy[2] == 'mi')
-      autonomyFrom = Math.round(
-        parseFloat(filters.autonomy[0]) * 0.621371,
-      ).toString();
-    else if (filters.autonomy[0] != '') autonomyFrom = '0';
-    let autonomyTo = '';
+      autonomyFrom = Math.round(parseFloat(filters.autonomy[0]) * 0.621371);
+    else if (filters.autonomy[0] != '')
+      autonomyFrom = parseInt(filters.autonomy[0]);
+    let autonomyTo = 9999999;
     if (filters.autonomy[1] != '' && filters.autonomy[2] == 'mi')
-      autonomyTo = Math.round(
-        parseFloat(filters.autonomy[0]) * 0.621371,
-      ).toString();
-    else if (filters.autonomy[1] != '') autonomyFrom = '99999999';
-    where.autonomy = Between(
-      filters.autonomy[0] == '' ? '0' : autonomyFrom,
-      filters.autonomy[1] == '' ? '9999999' : autonomyTo,
-    );
+      autonomyTo = Math.round(parseFloat(filters.autonomy[0]) * 0.621371);
+    else if (filters.autonomy[1] != '')
+      autonomyTo = parseInt(filters.autonomy[1]);
+    where.autonomy = Between(autonomyFrom, autonomyTo);
 
     let climate = filters.climate;
     if (filters.climate[0] == 'Dashboard.Placeholders.climate') climate[0] = '';
@@ -258,7 +252,6 @@ export class IndexerController {
     storage = storage.filter((str) => str !== '');
     if (storage.length > 0) where.storage = In(storage);
 
-    console.log(where);
     const holder = await this.holderRepository.find({
       skip: this.GROUP_SIZE * parseInt(page),
       take: this.GROUP_SIZE,
