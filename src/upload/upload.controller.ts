@@ -18,7 +18,7 @@ interface IPFSResponse {
 @Controller('upload')
 export class UploadController {
   @UseInterceptors(
-    FilesInterceptor('file', 120, {
+    FilesInterceptor('file', 200, {
       fileFilter: (_req, file, cb) => {
         const allowedMimes = [
           'application/json',
