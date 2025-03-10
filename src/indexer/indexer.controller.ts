@@ -122,6 +122,7 @@ export class IndexerController {
   ) {
     const where: any = {};
     where.owner_address = Not(owner_address);
+    where.requester_address = Not(owner_address);
     where.num_owners = Between(
       filters.numOwners[0] == '' ? 0 : parseInt(filters.numOwners[0]),
       filters.numOwners[1] == '' ? 9999 : parseInt(filters.numOwners[1]),
