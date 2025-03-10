@@ -42,6 +42,9 @@ export class Holder {
   state: string;
 
   @Column()
+  weight: number;
+
+  @Column()
   power: number;
 
   @Column()

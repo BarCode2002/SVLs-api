@@ -30,13 +30,13 @@ interface FiltersSVLs {
   brand: string;
   model: string;
   year: string;
-  kilometers: string;
+  kilometers: string[];
   state: string[];
-  color: string;
-  power: string;
+  weight: string[];
+  power: string[];
   shift: string[];
   fuel: string[];
-  autonomy: string;
+  autonomy: string[];
   climate: string[];
   usage: string[];
   storage: string[];
@@ -205,6 +205,16 @@ export class IndexerController {
     if (filters.state[0] == 'Dashboard.Placeholders.state') state[0] = '';
     state = state.filter((str) => str !== '');
     if (state.length > 0) where.state = In(state);
+
+    let weightFrom = 0;
+    if (filters.weight[0] != '' && filters.weight[2] == 'kW')
+      weightFrom = Math.round(parseFloat(filters.weight[0]) * 2.20462);
+    else if (filters.weight[0] != '') weightFrom = parseInt(filters.weight[0]);
+    let weightTo = 9999999;
+    if (filters.weight[1] != '' && filters.weight[2] == 'kW')
+      weightTo = Math.round(parseFloat(filters.weight[1]) * 2.20462);
+    else if (filters.weight[1] != '') weightTo = parseInt(filters.weight[1]);
+    where.weight = Between(weightFrom, weightTo);
 
     let powerFrom = 0;
     if (filters.power[0] != '' && filters.power[2] == 'kW')
