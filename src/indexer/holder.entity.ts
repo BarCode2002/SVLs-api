@@ -17,8 +17,8 @@ export class Holder {
   @Column()
   request_accepted: string;
 
-  @Column()
-  current_owner_info: string;
+  @Column({ type: 'jsonb', nullable: false })
+  current_owner_info: any[];
 
   @Column()
   previous_owners_info: string;
