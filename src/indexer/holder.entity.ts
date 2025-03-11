@@ -9,6 +9,9 @@ export class Holder {
   owner_address: string;
 
   @Column()
+  first_owner: boolean;
+
+  @Column()
   requester_address: string;
 
   @Column()
