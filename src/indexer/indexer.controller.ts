@@ -10,7 +10,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, In, Not, Raw, Repository } from 'typeorm';
+import { Between, In, Not, Repository } from 'typeorm';
 import { Holder } from './holder.entity';
 
 interface FiltersSVLs {
@@ -121,9 +121,6 @@ export class IndexerController {
     @Body() filters: FiltersSVLs,
   ) {
     const where: any = {};
-    where.current_owner_info = Raw(
-      () => 'jsonb_array_length(current_owner_info) > 0',
-    );
     where.owner_address = Not(owner_address);
     where.requester_address = Not(owner_address);
     where.num_owners = Between(
