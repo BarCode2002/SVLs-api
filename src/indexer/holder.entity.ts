@@ -17,11 +17,11 @@ export class Holder {
   @Column()
   request_accepted: string;
 
-  @Column({ type: 'jsonb', nullable: false })
-  current_owner_info: string[];
+  @Column()
+  current_owner_info: string;
 
   @Column()
-  previous_owners_info: string[];
+  previous_owners_info: string;
 
   @Column()
   svl_price: string;
