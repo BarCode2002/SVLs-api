@@ -263,13 +263,12 @@ export class IndexerController {
     storage = storage.filter((str) => str !== '');
     if (storage.length > 0) where.storage = In(storage);
 
-    console.log(where);
     const holder = await this.holderRepository.find({
       skip: this.GROUP_SIZE * parseInt(page),
       take: this.GROUP_SIZE,
       where,
     });
-    console.log(holder);
+
     const totalHolders = await this.holderRepository.find({ where });
     if (holder.length == 0) {
       throw new NotFoundException(
