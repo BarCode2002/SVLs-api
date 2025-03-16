@@ -188,17 +188,16 @@ export class IndexerController {
       filters.year[0] == '' ? 0 : parseInt(filters.year[0]),
       filters.year[1] == '' ? 9999 : parseInt(filters.year[1]),
     );
-
     let kmFrom = 0;
     if (filters.kilometers[0] != '' && filters.kilometers[2] == 'mi')
-      kmFrom = Math.round(parseFloat(filters.kilometers[0]) * 0.621371);
+      kmFrom = Math.round(parseFloat(filters.kilometers[0]) * 1.60934);
     else if (filters.kilometers[0] != '')
       kmFrom = parseInt(filters.kilometers[0]);
     let kmTo = 99999999;
     if (filters.kilometers[1] != '' && filters.kilometers[2] == 'mi')
-      kmTo = Math.round(parseFloat(filters.kilometers[1]) * 0.621371);
+      kmTo = Math.round(parseFloat(filters.kilometers[1]) * 1.60934);
     else if (filters.kilometers[1] != '')
-      kmFrom = parseInt(filters.kilometers[1]);
+      kmTo = parseInt(filters.kilometers[1]);
     where.kilometers = Between(kmFrom, kmTo);
 
     let state = filters.state;
@@ -207,12 +206,12 @@ export class IndexerController {
     if (state.length > 0) where.state = In(state);
 
     let weightFrom = 0;
-    if (filters.weight[0] != '' && filters.weight[2] == 'kW')
-      weightFrom = Math.round(parseFloat(filters.weight[0]) * 2.20462);
+    if (filters.weight[0] != '' && filters.weight[2] == 'lb')
+      weightFrom = Math.round(parseFloat(filters.weight[0]) * 0.453592);
     else if (filters.weight[0] != '') weightFrom = parseInt(filters.weight[0]);
     let weightTo = 9999999;
-    if (filters.weight[1] != '' && filters.weight[2] == 'kW')
-      weightTo = Math.round(parseFloat(filters.weight[1]) * 2.20462);
+    if (filters.weight[1] != '' && filters.weight[2] == 'lb')
+      weightTo = Math.round(parseFloat(filters.weight[1]) * 0.453592);
     else if (filters.weight[1] != '') weightTo = parseInt(filters.weight[1]);
     where.weight = Between(weightFrom, weightTo);
 
@@ -238,12 +237,12 @@ export class IndexerController {
 
     let autonomyFrom = 0;
     if (filters.autonomy[0] != '' && filters.autonomy[2] == 'mi')
-      autonomyFrom = Math.round(parseFloat(filters.autonomy[0]) * 0.621371);
+      autonomyFrom = Math.round(parseFloat(filters.autonomy[0]) * 1.60934);
     else if (filters.autonomy[0] != '')
       autonomyFrom = parseInt(filters.autonomy[0]);
     let autonomyTo = 9999999;
     if (filters.autonomy[1] != '' && filters.autonomy[2] == 'mi')
-      autonomyTo = Math.round(parseFloat(filters.autonomy[1]) * 0.621371);
+      autonomyTo = Math.round(parseFloat(filters.autonomy[1]) * 1.60934);
     else if (filters.autonomy[1] != '')
       autonomyTo = parseInt(filters.autonomy[1]);
     where.autonomy = Between(autonomyFrom, autonomyTo);
