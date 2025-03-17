@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:22
 
 WORKDIR /usr/src/app
 
@@ -9,7 +9,6 @@ RUN npm install
 COPY . .
 
 RUN npm run build
-
 
 EXPOSE 3000
 
