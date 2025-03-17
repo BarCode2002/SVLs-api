@@ -60,7 +60,7 @@ export class UploadController {
         }
 
         const response: AxiosResponse<IPFSResponse> = await axios.post(
-          'http://127.0.0.1:5001/api/v0/add?cid-version=1',
+          'http://host.docker.internal:5001/api/v0/add?cid-version=1',
           formData,
           {
             headers: formData.getHeaders(),
