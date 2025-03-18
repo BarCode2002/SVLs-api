@@ -44,7 +44,7 @@ interface FiltersSVLs {
 
 @Controller('indexer')
 export class IndexerController {
-  private readonly GROUP_SIZE = 3;
+  private readonly GROUP_SIZE = 20;
   constructor(
     @InjectRepository(Holder)
     private readonly holderRepository: Repository<Holder>,
