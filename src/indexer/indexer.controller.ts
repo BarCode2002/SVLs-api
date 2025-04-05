@@ -180,10 +180,8 @@ export class IndexerController {
       filters.numRepairs[1] == '' ? 9999 : parseInt(filters.numRepairs[1]),
     );
     if (filters.vin != '') where.vin = filters.vin;
-    if (filters.brand != '' && filters.brand != 'Dashboard.Placeholders.brand')
-      where.brand = filters.brand;
-    if (filters.model != '' && filters.model != 'Dashboard.Placeholders.model')
-      where.brand = filters.brand;
+    if (filters.brand != '') where.brand = filters.brand;
+    if (filters.model != '') where.brand = filters.brand;
     where.year = Between(
       filters.year[0] == '' ? 0 : parseInt(filters.year[0]),
       filters.year[1] == '' ? 9999 : parseInt(filters.year[1]),
@@ -200,10 +198,8 @@ export class IndexerController {
       kmTo = parseInt(filters.kilometers[1]);
     where.kilometers = Between(kmFrom, kmTo);
 
-    let state = filters.state;
-    if (filters.state[0] == 'Dashboard.Placeholders.state') state[0] = '';
-    state = state.filter((str) => str !== '');
-    if (state.length > 0) where.state = In(state);
+    filters.state = filters.state.filter((str) => str !== '');
+    if (filters.state.length > 0) where.state = In(filters.state);
 
     let weightFrom = 0;
     if (filters.weight[0] != '' && filters.weight[2] == 'lb')
@@ -225,15 +221,11 @@ export class IndexerController {
     else if (filters.power[1] != '') powerTo = parseInt(filters.power[1]);
     where.power = Between(powerFrom, powerTo);
 
-    let shift = filters.shift;
-    if (filters.shift[0] == 'Dashboard.Placeholders.shift') shift[0] = '';
-    shift = shift.filter((str) => str !== '');
-    if (shift.length > 0) where.shift = In(shift);
+    filters.shift = filters.shift.filter((str) => str !== '');
+    if (filters.shift.length > 0) where.shift = In(filters.shift);
 
-    let fuel = filters.fuel;
-    if (filters.fuel[0] == 'Dashboard.Placeholders.fuel') fuel[0] = '';
-    fuel = fuel.filter((str) => str !== '');
-    if (fuel.length > 0) where.fuel = In(fuel);
+    filters.fuel = filters.fuel.filter((str) => str !== '');
+    if (filters.fuel.length > 0) where.fuel = In(filters.fuel);
 
     let autonomyFrom = 0;
     if (filters.autonomy[0] != '' && filters.autonomy[2] == 'mi')
@@ -247,20 +239,14 @@ export class IndexerController {
       autonomyTo = parseInt(filters.autonomy[1]);
     where.autonomy = Between(autonomyFrom, autonomyTo);
 
-    let climate = filters.climate;
-    if (filters.climate[0] == 'Dashboard.Placeholders.climate') climate[0] = '';
-    climate = climate.filter((str) => str !== '');
-    if (climate.length > 0) where.climate = In(climate);
+    filters.climate = filters.climate.filter((str) => str !== '');
+    if (filters.climate.length > 0) where.climate = In(filters.climate);
 
-    let usage = filters.usage;
-    if (filters.usage[0] == 'Dashboard.Placeholders.usage') usage[0] = '';
-    usage = usage.filter((str) => str !== '');
-    if (usage.length > 0) where.usage = In(usage);
+    filters.usage = filters.usage.filter((str) => str !== '');
+    if (filters.usage.length > 0) where.usage = In(filters.usage);
 
-    let storage = filters.storage;
-    if (filters.storage[0] == 'Dashboard.Placeholders.storage') storage[0] = '';
-    storage = storage.filter((str) => str !== '');
-    if (storage.length > 0) where.storage = In(storage);
+    filters.storage = filters.storage.filter((str) => str !== '');
+    if (filters.storage.length > 0) where.storage = In(filters.storage);
 
     const holder = await this.holderRepository.find({
       skip: this.GROUP_SIZE * parseInt(page),
